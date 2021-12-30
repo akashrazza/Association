@@ -3,6 +3,7 @@ const CredentialModel = require("./models").Credentials;
 const UserModel = require("./models").UserDetails;
 const PostModel = require("./models").Posts;
 const BookModel = require("./models").books;
+const BookJunctionModel = require("./models").userbook;
 const app = express();
 const PORT = 3000;
 
@@ -32,7 +33,15 @@ app.get("/users", (req, res) => {
 
 
 app.get("/books", (req, res) => {
-    BookModel.findAll({include: [{all:true}]})
+    BookModel.findAll({include: [{
+        model: UserModel,
+        // Pass in the Product attributes that you want to retrieve
+        // attributes: ['id', 'name'],
+        through: {
+          // This block of code allows you to retrieve the properties of the join table
+          model: BookJunctionModel
+        }
+      }]})
       .then((data) => {
         res.status(200).json({
           status: 1,
