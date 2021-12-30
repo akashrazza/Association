@@ -2,7 +2,7 @@ const express = require("express");
 const CredentialModel = require("./models").Credentials;
 const UserModel = require("./models").UserDetails;
 const PostModel = require("./models").Posts;
-
+const BookModel = require("./models").books;
 const app = express();
 const PORT = 3000;
 
@@ -29,6 +29,24 @@ app.get("/users", (req, res) => {
       });
     });
 });
+
+
+app.get("/books", (req, res) => {
+    BookModel.findAll({include: [{all:true}]})
+      .then((data) => {
+        res.status(200).json({
+          status: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          status: 0,
+          msg: "there is something error",
+          err: err,
+        });
+      });
+  });
 
 app.get("/usercredential", (req, res) => {
   CredentialModel.findAll({include: [{all:true}]})
